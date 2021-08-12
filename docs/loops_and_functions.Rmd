@@ -1,0 +1,138 @@
+---
+title: "Loops and Functions"
+author: "Grace Lewin"
+date: "8/12/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Part 1: For loops revisited
+
+## Task 1
+
+```{r}
+weekdays = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+
+transects = c("Transect A", "Transect B", "Transect C")
+
+out_matrix <- matrix(nrow = length(weekdays), ncol = length(transects))
+
+for (i in seq_along(transects)) {
+  for (j in seq_along(weekdays)) {
+    out_matrix[j, i] = print(paste(weekdays[j], "-", transects[i]))
+  }
+}
+  
+```
+
+# Part 2: Functions introduced
+
+## Task 2
+
+```{r}
+force <- function(mass, accel) {
+  force_N <- mass * accel
+  print(paste("The resulting force is", force_N, "Newtons."))
+}
+
+force(mass = 3, accel = 5)
+```
+
+## Task 3
+
+```{r}
+name_column <- function(df, number) {
+  
+  if (number < 1) {
+    stop("number must be at least 1.")
+  }
+  
+  if (number > ncol(df)) {
+    stop("Number exceeds number of columns in the data frame.")
+  }
+  
+  colnames(df[number])
+}
+
+name_column(df = mtcars, number = 10)
+```
+
+## Task 4
+
+```{r}
+fish_parms <- data.frame(sci_name = c("Chanos chanos", 
+                                      "Sphyraena barracuda",
+                                      "Caranx ignobilis"),
+                         common_name = c("Milkfish", 
+                                         "Great barracuda",
+                                         "Giant trevally"),
+                         a_est = c(0.0905, 0.0181, 0.0353),
+                         b_est = c(2.52, 3.27, 3.05))
+
+fish_weight = function(fish_name, tot_length) {
+  common_name_select <- dplyr::filter(fish_parms,
+                                      common_name == fish_name)
+  weight = common_name_select$a_est * tot_length ^ common_name_select$b_est
+  return(weight)
+}
+
+fish_weight("Great barracuda", 2)
+
+length_vec <- seq(from = 0, to = 100, by = 1)
+
+milkfish_weights <- fish_weight(fish_name = "Great barracuda", tot_length = length_vec)
+milkfish_weights
+```
+
+## Task 5
+
+```{r}
+wave_power_deep <- function(height, period) {
+  power_deep <- 0.5 * (height^2) * period
+  return(power_deep)
+}
+
+wave_power_deep(height = seq(from = 0, to = 3, by = 0.2), 
+           period = 8)
+```
+
+## Task 6
+
+```{r}
+wave_power_shallow <- function(height, period) {
+  power_shallow <- 0.81 * (height^2) * period
+  return(power_shallow)
+}
+
+wave_power_shallow(5, 8)
+
+wave_power <- function(depth, height, period) {
+  
+  if (depth <= 12) {
+    message("Shallow water wave power equation used")
+    wave_power_shallow(height, period)
+    
+  }
+  
+  else if (depth > 12) {
+    message("Deep water wave power equation used")
+    wave_power_deep(height, period)
+  }
+}
+
+wave_power(depth = 15, height = 56, period = 8)
+
+
+```
+
+
+
+
+
+
+
+
+
